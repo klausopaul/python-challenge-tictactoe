@@ -1,4 +1,9 @@
 from random import randrange
+import os
+
+
+def cls():
+    os.system("cls" if os.name == "nt" else "clear")
 
 
 # -------------------------------------------------------------------------
@@ -297,6 +302,8 @@ free_positions = [(0, 0), (0, 1), (0, 2), (1, 0), (1, 2), (2, 0), (2, 1), (2, 2)
 # Initial state of the game
 end_of_game = False
 
+# Now, to clear the screen
+cls()
 print()
 print("Welcome to Tic-Tac-Toe.")
 print("You can exit the game at any time by entering q or Q")
@@ -309,19 +316,7 @@ while not (end_of_game):
     # Enter user's move
     results = enter_move(game_board, map_play_input_to_board_coord, free_positions)
 
-    # If user move was ok (results == 0) then let computer play
-    if results == 0:
-        # Computer's move
-        computer_enter_move(game_board, map_play_input_to_board_coord, free_positions)
-
-    elif results == -3:  # user quit the game in progress
-        end_of_game = True
-
-    # Display board state
-    display_board(game_board)
-
     game_status = has_game_ended(game_board)
-
     if game_status != "P":
         end_of_game = True
         if game_status == "H":
@@ -331,5 +326,27 @@ while not (end_of_game):
         elif game_status == "T":
             print("The game was a tie")
 
-    # separator between plays
+    # If user move was ok (results == 0) then let computer play
+    if results == 0 and game_status == "P":
+        # Computer's move
+        computer_enter_move(game_board, map_play_input_to_board_coord, free_positions)
+
+        game_status = has_game_ended(game_board)
+
+        if game_status != "P":
+            end_of_game = True
+            if game_status == "H":
+                print("Human wins!")
+            elif game_status == "C":
+                print("Computer wins")
+            elif game_status == "T":
+                print("The game was a tie")
+
+    elif results == -3:  # user quit the game in progress
+        end_of_game = True
+
+    # Display board state
+    display_board(game_board)
+
+    # cosmetic separator between plays
     print("-" * 40)
