@@ -172,7 +172,7 @@ def computer_enter_move(board, map_play_input_to_board, free_positions):
 
     choosing = True
     while choosing:
-        play_input = randrange(8)
+        play_input = randrange(1, 9)
 
         result = calculate_result_of_play(
             board, play_input, map_play_input_to_board, free_positions, "computer"
