@@ -192,7 +192,7 @@ def computer_enter_move(board, map_play_input_to_board, free_positions):
 
 
 # -------------------------------------------------------------------------
-def has_game_ended(board):
+def has_game_ended(game_board):
     results = []
 
     # Rows
