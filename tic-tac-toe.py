@@ -135,10 +135,10 @@ def calculate_result_of_play(
         # remove the position from the free positions
         remove_free_position(free_positions, coord)
         # tell the play was good
-        return 0
+        return True
     else:
         # position is occupied
-        return -1
+        return False
 
 
 # -------------------------------------------------------------------------
@@ -150,7 +150,7 @@ def enter_move(board, map_play_input_to_board, free_positions):
     except ValueError:
         if play_input.upper() == "Q":
             print("Exiting game...")
-            return -3
+            return False
         else:
             print_invalid_input_msg()
     else:
@@ -162,14 +162,14 @@ def enter_move(board, map_play_input_to_board, free_positions):
                 free_positions,
                 "user",
             )
-            if result == -1:
+            if not (result):
                 print_occupied_msg()
-                return -1  # give user another change, not letting computer play
+                return False  # give user another change, not letting computer play
             else:
-                return 0  # let computer play
+                return True  # let computer play
         else:
             print_invalid_input_msg()
-            return -1  # give user another change, not letting computer play
+            return False  # give user another change, not letting computer play
 
 
 # -------------------------------------------------------------------------
@@ -183,7 +183,7 @@ def computer_enter_move(board, map_play_input_to_board, free_positions):
             board, play_input, map_play_input_to_board, free_positions, "computer"
         )
 
-        if result == -1:
+        if not (result):
             # print ('Computer played a occupied position')
             choosing = True
         else:
@@ -263,10 +263,6 @@ def return_game_status(game_board):
         if t[1] == 2:
             tie += 1
 
-    # print ('wh ', wh)
-    # print ('wc ', wc)
-    # print ('tie ', tie)
-
     if wh == 1:
         return "H"  # ('Human wins!')
     elif wc == 1:
@@ -291,60 +287,69 @@ def print_results(game_status):
 # -----------------------------------------------------------------------------------------------
 # Main routine
 # -----------------------------------------------------------------------------------------------
-# Initial board state at the beginning of every game
-game_board = [[1, 2, 3], [4, "X", 6], [7, 8, 9]]
+def main():
+    # Initial board state at the beginning of every game
+    game_board = [[1, 2, 3], [4, "X", 6], [7, 8, 9]]
 
-# maps input to coordinates in the board
-map_play_input_to_board_coord = {
-    1: (0, 0),
-    2: (0, 1),
-    3: (0, 2),
-    4: (1, 0),
-    5: (1, 1),
-    6: (1, 2),
-    7: (2, 0),
-    8: (2, 1),
-    9: (2, 2),
-}
+    # maps input to coordinates in the board
+    map_play_input_to_board_coord = {
+        1: (0, 0),
+        2: (0, 1),
+        3: (0, 2),
+        4: (1, 0),
+        5: (1, 1),
+        6: (1, 2),
+        7: (2, 0),
+        8: (2, 1),
+        9: (2, 2),
+    }
 
-# Initial free positions, except position 5, coordinates (1,1)
-free_positions = [(0, 0), (0, 1), (0, 2), (1, 0), (1, 2), (2, 0), (2, 1), (2, 2)]
+    # Initial free positions, except position 5, coordinates (1,1)
+    free_positions = [(0, 0), (0, 1), (0, 2), (1, 0), (1, 2), (2, 0), (2, 1), (2, 2)]
 
-# Initial state of the game
-end_of_game = False
+    # Initial state of the game
+    end_of_game = False
 
-# Now, to clear the screen
-cls()
-print()
-print("Welcome to Tic-Tac-Toe.")
-print("You can exit the game at any time by entering q or Q.")
-print('The computer is playing "X" and it has already started.')
+    # Now, to clear the screen
+    cls()
+    print()
+    print("Welcome to Tic-Tac-Toe.")
+    print("You can exit the game at any time by entering q or Q.")
+    print('The computer is playing "X" and it has already started.')
 
-display_board(game_board)
+    display_board(game_board)
 
-# Start the gamea
-while not (end_of_game):
-    # Enter user's move
-    results = enter_move(game_board, map_play_input_to_board_coord, free_positions)
-
-    game_status = return_game_status(game_board)
-
-    end_of_game = print_results(game_status)
-
-    # If user move was ok (results == 0) then let computer play
-    if results == 0 and game_status == "P":
-        # Computer's move
-        computer_enter_move(game_board, map_play_input_to_board_coord, free_positions)
+    # Start the gamea
+    while not (end_of_game):
+        # Enter user's move
+        computer_turn = enter_move(
+            game_board, map_play_input_to_board_coord, free_positions
+        )
 
         game_status = return_game_status(game_board)
 
         end_of_game = print_results(game_status)
 
-    elif results == -3:  # user quit the game in progress
-        end_of_game = True
+        # If user move was ok (results == 0) then let computer play
+        if computer_turn and game_status == "P":
+            # Computer's move
+            computer_enter_move(
+                game_board, map_play_input_to_board_coord, free_positions
+            )
 
-    # Display board state
-    display_board(game_board)
+            game_status = return_game_status(game_board)
 
-    # cosmetic separator between plays
-    print(" " * 40)
+            end_of_game = print_results(game_status)
+
+        elif not (computer_turn):  # user quit the game in progress
+            end_of_game = True
+
+        # Display board state
+        display_board(game_board)
+
+        # cosmetic separator between plays
+        print(" " * 40)
+
+
+if __name__ == "__main__":
+    main()
