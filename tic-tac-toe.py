@@ -53,8 +53,8 @@ def print_number_in_row(board, row):
 # -------------------------------------------------------------------------
 def display_board(board):
 
-    print()
-    print("Current board status")
+    # print()
+    # print("Current board status")
     top_line_board()
     print_number_in_row(board, 0)
     bottom_line_board()
@@ -192,7 +192,7 @@ def computer_enter_move(board, map_play_input_to_board, free_positions):
 
 
 # -------------------------------------------------------------------------
-def has_game_ended(game_board):
+def return_game_status(game_board):
     results = []
 
     # Rows
@@ -277,6 +277,17 @@ def has_game_ended(game_board):
         return "P"  # ('Game in progress...')
 
 
+def print_results(game_status):
+    if game_status != "P":
+        if game_status == "H":
+            print("Human wins!")
+        elif game_status == "C":
+            print("Computer wins")
+        elif game_status == "T":
+            print("The game was a tie")
+        return True
+
+
 # -----------------------------------------------------------------------------------------------
 # Main routine
 # -----------------------------------------------------------------------------------------------
@@ -306,8 +317,8 @@ end_of_game = False
 cls()
 print()
 print("Welcome to Tic-Tac-Toe.")
-print("You can exit the game at any time by entering q or Q")
-print('The computer is playing "X" and it has already started')
+print("You can exit the game at any time by entering q or Q.")
+print('The computer is playing "X" and it has already started.')
 
 display_board(game_board)
 
@@ -316,31 +327,18 @@ while not (end_of_game):
     # Enter user's move
     results = enter_move(game_board, map_play_input_to_board_coord, free_positions)
 
-    game_status = has_game_ended(game_board)
-    if game_status != "P":
-        end_of_game = True
-        if game_status == "H":
-            print("Human wins!")
-        elif game_status == "C":
-            print("Computer wins")
-        elif game_status == "T":
-            print("The game was a tie")
+    game_status = return_game_status(game_board)
+
+    end_of_game = print_results(game_status)
 
     # If user move was ok (results == 0) then let computer play
     if results == 0 and game_status == "P":
         # Computer's move
         computer_enter_move(game_board, map_play_input_to_board_coord, free_positions)
 
-        game_status = has_game_ended(game_board)
+        game_status = return_game_status(game_board)
 
-        if game_status != "P":
-            end_of_game = True
-            if game_status == "H":
-                print("Human wins!")
-            elif game_status == "C":
-                print("Computer wins")
-            elif game_status == "T":
-                print("The game was a tie")
+        end_of_game = print_results(game_status)
 
     elif results == -3:  # user quit the game in progress
         end_of_game = True
@@ -349,4 +347,4 @@ while not (end_of_game):
     display_board(game_board)
 
     # cosmetic separator between plays
-    print("-" * 40)
+    print(" " * 40)
