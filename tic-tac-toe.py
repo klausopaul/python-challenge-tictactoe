@@ -187,7 +187,7 @@ def computer_enter_move(board, map_play_input_to_board, free_positions):
             # print ('Computer played a occupied position')
             choosing = True
         else:
-            # print ('Computer has played')
+            print("Computer has played")
             choosing = False
 
 
